@@ -6,6 +6,8 @@ return {
     "nvim-tree/nvim-web-devicons",
   },
   config = function()
-    require("nvim-tree").setup {}
+    require("nvim-tree").setup ({
+      on_attach = require("config.keybindings").nvim_tree.on_attach,
+    })
   end,
 }
