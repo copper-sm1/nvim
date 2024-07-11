@@ -67,13 +67,13 @@ local function keybindings_nvim_tree_handle(bufnr)
     vim.keymap.set('n', 'y',       api.fs.copy.filename,                opts('Copy Name'))
     vim.keymap.set('n', 'Y',       api.fs.copy.relative_path,           opts('Copy Relative Path'))
     vim.keymap.set('n', '<2-LeftMouse>',  api.node.open.edit,           opts('Open'))
-    vim.keymap.set('n', '<2-RightMouse>', api.tree.change_root_to_node, opts('CD'))
+    -- vim.keymap.set('n', '<2-RightMouse>', api.tree.change_root_to_node, opts('CD'))
     -- END_DEFAULT_ON_ATTACH
     -- -- remove a default
     -- vim.keymap.del('n', '<C-]>', { buffer = bufnr })
 
     -- -- override a default
-    -- vim.keymap.set('n', '<C-e>', api.tree.reload,                       opts('Refresh'))
+    vim.keymap.set('n', 'cd', api.tree.change_root_to_node, opts('CD'))
 
     -- -- add your mappings
     -- vim.keymap.set('n', '?',     api.tree.toggle_help,                  opts('Help'))
@@ -82,16 +82,38 @@ end -- keybindings_nvim_tree_handle
 --telescope
 local function keybindings_telescope_handle()
     local builtin = require('telescope.builtin')
-    vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
-    vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
-    vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
-    vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
+    local function opts(desc)
+        return { desc = 'telescope: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+    end -- opts
+    vim.keymap.set('n', '<leader>ff', builtin.find_files, opts('find_files'))
+    vim.keymap.set('n', '<leader>fg', builtin.live_grep, opts('live_grep'))
+    vim.keymap.set('n', '<leader>fb', builtin.buffers, opts('buffers'))
+    vim.keymap.set('n', '<leader>fh', builtin.help_tags, opts('help_tags'))
 end -- keybindings_telescope_handle
+
+--bufferline
+local function keybindings_bufferline_handle()
+    local buferline = require('bufferline')
+    local function opts(desc)
+        return { desc = 'bufferline: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+    end -- opts
+    vim.keymap.set('n', '<leader>1', ":BufferLineGoToBuffer 1<CR>", opts('go_to_buffer(visible)(1)'))
+    -- vim.keymap.set('n', '<leader>2', buferline.go_to(2, false), opts('go_to_buffer(visible)(2)'))
+    -- vim.keymap.set('n', '<leader>3', buferline.go_to(3, false), opts('go_to_buffer(visible)(3)'))
+    -- vim.keymap.set('n', '<leader>4', buferline.go_to(4, false), opts('go_to_buffer(visible)(4)'))
+    -- vim.keymap.set('n', '<leader>5', buferline.go_to(5, false), opts('go_to_buffer(visible)(5)'))
+    -- vim.keymap.set('n', '<leader>6', buferline.go_to(6, false), opts('go_to_buffer(visible)(6)'))
+    -- vim.keymap.set('n', '<leader>7', buferline.go_to(7, false), opts('go_to_buffer(visible)(7)'))
+    -- vim.keymap.set('n', '<leader>8', buferline.go_to(8, false), opts('go_to_buffer(visible)(8)'))
+    -- vim.keymap.set('n', '<leader>9', buferline.go_to(9, false), opts('go_to_buffer(visible)(9)'))
+    -- vim.keymap.set('n', '<leader>0', buferline.go_to(-1, false), opts('go_to_buffer(visible)(-1)'))
+end -- keybindings_bufferline_handle
 
 return {
     neovim_setup = keybindings_neovim_handle,
     nvim_tree = {
         on_attach = keybindings_nvim_tree_handle
     },
-    telescope_setup = keybindings_telescope_handle
+    telescope_setup = keybindings_telescope_handle,
+    bufferline_setup = keybindings_bufferline_handle,
 }
